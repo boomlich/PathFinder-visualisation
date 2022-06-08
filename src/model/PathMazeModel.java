@@ -5,6 +5,8 @@ import grid.Tile;
 import grid.TileState;
 import maze.MazeGenerator;
 import maze.RandomDFS;
+import maze.RandomKruskal;
+import maze.RandomPrim;
 import pathfinding.Pathfinder;
 
 import java.awt.*;
@@ -26,12 +28,19 @@ public class PathMazeModel implements Renderable<Tile> {
     }
 
     public void generateMaze() {
-        MazeGenerator mazeGenerator = new RandomDFS(grid, startCell);
+
+//        MazeGenerator mazeGenerator = new RandomKruskal(grid, startCell);
+
+        MazeGenerator mazeGenerator = new RandomPrim(grid, startCell);
+
+
+//        MazeGenerator mazeGenerator = new RandomDFS(grid, startCell);
         mazePath = mazeGenerator.generateMaze();
         currentTile = mazePath.remove(0);
     }
 
     public void update() {
+//        System.out.println("updated");
         if (!mazePath.isEmpty()) {
             grid.setCell(currentTile, new Tile(TileState.NORMAL));
             currentTile = mazePath.remove(0);

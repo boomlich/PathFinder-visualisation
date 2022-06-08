@@ -41,7 +41,7 @@ public class Viewer extends JComponent {
             for (int j = 0; j < gridWidth; j++) {
                 double x = offsetX + tileWidth * j;
                 double y = offsetY + tileHeight * i;
-                drawTile(g2D, x, y, tileWidth, tileHeight, grid.getCell(new Point(i, j)));
+                drawTile(g2D, x, y, tileWidth, tileHeight, grid.getCell(new Point(j, i)));
             }
         }
     }

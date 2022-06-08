@@ -31,12 +31,11 @@ public class Grid<E> implements IGrid<E>, Iterable<E> {
     }
 
     private int cellIndex(Point position) {
-        return position.x * getWidth() + position.y;
+        return position.y * getWidth() + position.x;
     }
 
     @Override
     public void setCell(Point position, E value) {
-        System.out.println(position);
         grid.set(cellIndex(position), value);
     }
 

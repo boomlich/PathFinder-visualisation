@@ -44,5 +44,6 @@ public class Controller implements KeyListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
         model.update();
         viewer.repaint();
+//        System.out.println("updated");
     }
 }

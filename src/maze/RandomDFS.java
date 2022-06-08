@@ -32,14 +32,11 @@ public class RandomDFS extends MazeGenerator {
         while (!cellStack.isEmpty()) {
             currentCell = cellStack.remove(cellStack.size() - 1);
             List<Point> unvisitedNeighbours = getUnvisitedNeighbours(currentCell);
-            System.out.println(unvisitedNeighbours);
             if (!unvisitedNeighbours.isEmpty()) {
                 cellStack.add(currentCell);
                 chosenCell = selectRandomNeighbour(unvisitedNeighbours);
 
-                int wallX = (currentCell.x + chosenCell.x) / 2;
-                int wallY = (currentCell.y + chosenCell.y) / 2;
-                Point wallCell = new Point(wallX, wallY);
+                Point wallCell = new Point((currentCell.x + chosenCell.x) / 2, (currentCell.y + chosenCell.y) / 2);
                 path.add(wallCell);
 
                 visitCell(chosenCell);
@@ -58,8 +55,6 @@ public class RandomDFS extends MazeGenerator {
         List<Point> unvisitedNeighbours = new ArrayList<>();
         for (NeighburCells neighbourOffset: NeighburCells.ALL_VALUES()) {
             Point neighbour = new Point(cell.x + neighbourOffset.x, cell.y + neighbourOffset.y);
-            System.out.println(grid.getWidth());
-            System.out.println(grid.getHeight());
             if (grid.inBounds(neighbour)) {
                 if (!visited.contains(neighbour)) {
                     unvisitedNeighbours.add(neighbour);
