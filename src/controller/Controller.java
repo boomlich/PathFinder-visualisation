@@ -18,7 +18,11 @@ public class Controller implements KeyListener, ActionListener {
     public Controller(PathMazeModel model, Viewer viewer) {
         this.model = model;
         this.viewer = viewer;
+        MouseController mouseController = new MouseController(model);
+
         viewer.addKeyListener(this);
+        viewer.addMouseListener(mouseController);
+        viewer.addMouseMotionListener(mouseController);
 
         Timer timer = new Timer(10, this);
         timer.start();
@@ -32,7 +36,7 @@ public class Controller implements KeyListener, ActionListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        char key = e.getKeyChar();
+        int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_ENTER) {
             model.generateMaze();
@@ -46,6 +50,8 @@ public class Controller implements KeyListener, ActionListener {
             model.setMazeMode(MazeMode.PRIM);
         } else if (key == KeyEvent.VK_4) {
             model.setMazeMode(MazeMode.DIVISION);
+        } else if (key == KeyEvent.VK_R) {
+            model.resetGrid();
         }
     }
 

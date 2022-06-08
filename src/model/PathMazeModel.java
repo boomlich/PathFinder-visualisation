@@ -23,12 +23,18 @@ public class PathMazeModel implements Renderable<Tile> {
     private Point currentTile;
     private MazeMode mazeMode;
     private boolean inverted;
+    private InteractMode interactMode;
+    private int renderWidth;
+    private int renderHeight;
 
     public PathMazeModel() {
-        grid = new Grid<>(51, 51, new Tile(TileState.NORMAL));
+        grid = new Grid<>(50, 50, new Tile(TileState.NORMAL));
         setStartCell(5, 5);
         pathFinder = new Pathfinder();
         mazeMode = MazeMode.PRIM;
+        interactMode = InteractMode.WALL;
+        renderWidth = 500;
+        renderHeight = 500;
     }
 
     public void generateMaze() {
@@ -55,6 +61,12 @@ public class PathMazeModel implements Renderable<Tile> {
         this.mazeMode = mazeMode;
     }
 
+    public void resetGrid() {
+        System.out.println("reset");
+        mazePath.clear();
+        grid.fill(new Tile(TileState.NORMAL));
+    }
+
     public void fastMazeGeneration() {
         while (!mazePath.isEmpty()) {
             mazeGenerationStep();
@@ -62,7 +74,6 @@ public class PathMazeModel implements Renderable<Tile> {
     }
 
     public void update() {
-//        System.out.println("updated");
 
         if (!mazePath.isEmpty()) {
             mazeGenerationStep();
@@ -84,11 +95,41 @@ public class PathMazeModel implements Renderable<Tile> {
         return grid;
     }
 
+    @Override
+    public int getRenderWidth() {
+        return renderWidth;
+    }
+
+    @Override
+    public int getRenderHeight() {
+        return renderHeight;
+    }
+
     private void setStartCell(int x, int y) {
         if (startCell != null) {
             grid.setCell(startCell, new Tile(TileState.NORMAL));
         }
         startCell = new Point(x, y);
         grid.setCell(startCell, new Tile(TileState.START));
+    }
+
+    public void clickCell(int x, int y) {
+        Point cell = new Point(x, y);
+        if (grid.inBounds(cell)) {
+            if (interactMode == InteractMode.WALL) {
+                grid.setCell(cell, new Tile(TileState.WALL));
+            } else if (interactMode == InteractMode.NORMAL){
+                grid.setCell(cell, new Tile(TileState.NORMAL));
+            }
+        }
+    }
+
+    public void setInteractMode(InteractMode mode) {
+        interactMode = mode;
+
+    }
+
+    public InteractMode getInteractMode() {
+        return interactMode;
     }
 }
