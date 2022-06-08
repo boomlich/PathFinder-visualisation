@@ -16,9 +16,11 @@ public abstract class MazeGenerator {
     protected List<Point> path;
     protected Random random = new Random();
 
-    public MazeGenerator(Grid<Tile> grid) {
+    public MazeGenerator(Grid<Tile> grid, boolean fillWalls) {
         this.grid = grid;
-        this.grid.fill(new Tile(TileState.WALL));
+        if (fillWalls) {
+            this.grid.fill(new Tile(TileState.WALL));
+        }
         path = new ArrayList<>();
         visited = new ArrayList<>();
     }

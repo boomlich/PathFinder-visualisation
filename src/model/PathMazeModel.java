@@ -3,10 +3,7 @@ package model;
 import grid.Grid;
 import grid.Tile;
 import grid.TileState;
-import maze.MazeGenerator;
-import maze.RandomDFS;
-import maze.RandomKruskal;
-import maze.RandomPrim;
+import maze.*;
 import pathfinding.Pathfinder;
 
 import java.awt.*;
@@ -22,7 +19,7 @@ public class PathMazeModel implements Renderable<Tile> {
     private Point currentTile;
 
     public PathMazeModel() {
-        grid = new Grid<>(51, 51, new Tile(TileState.NORMAL));
+        grid = new Grid<>(50, 50, new Tile(TileState.NORMAL));
         setStartCell(5, 5);
         pathFinder = new Pathfinder();
     }
@@ -31,7 +28,9 @@ public class PathMazeModel implements Renderable<Tile> {
 
 //        MazeGenerator mazeGenerator = new RandomKruskal(grid, startCell);
 
-        MazeGenerator mazeGenerator = new RandomPrim(grid, startCell);
+//        MazeGenerator mazeGenerator = new RandomPrim(grid, startCell);
+
+        MazeGenerator mazeGenerator = new RecursiveDivision(grid, startCell);
 
 
 //        MazeGenerator mazeGenerator = new RandomDFS(grid, startCell);
@@ -41,8 +40,13 @@ public class PathMazeModel implements Renderable<Tile> {
 
     public void update() {
 //        System.out.println("updated");
+//        if (!mazePath.isEmpty()) {
+//            grid.setCell(currentTile, new Tile(TileState.NORMAL));
+//            currentTile = mazePath.remove(0);
+//            grid.setCell(currentTile, new Tile(TileState.CURRENT));
+//        }
         if (!mazePath.isEmpty()) {
-            grid.setCell(currentTile, new Tile(TileState.NORMAL));
+            grid.setCell(currentTile, new Tile(TileState.WALL));
             currentTile = mazePath.remove(0);
             grid.setCell(currentTile, new Tile(TileState.CURRENT));
         }
