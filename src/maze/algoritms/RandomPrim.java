@@ -1,7 +1,8 @@
-package maze;
+package maze.algoritms;
 
 import grid.Grid;
 import grid.Tile;
+import maze.MazeGenerator;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,23 +33,27 @@ public class RandomPrim extends MazeGenerator {
     @Override
     public List<Point> generateMaze() {
 
-        Point currentTile = new Point(2, 2);
-        markVisited(currentTile);
-        wallTiles.addAll(identifyCellWalls(currentTile));
+        Point startCell = freeTiles.get(random.nextInt(freeTiles.size()));
+        markVisited(startCell);
+        wallTiles.addAll(identifyCellWalls(startCell));
 
         while (!wallTiles.isEmpty()) {
             Point currentWall = wallTiles.get(random.nextInt(wallTiles.size()));
             List<Point> neighbours = selectCrossNeighbour(currentWall, currentWall.y % 2 == 0);
 
-            boolean aVisited = visited.contains(neighbours.get(0));
-            boolean bVisited = visited.contains(neighbours.get(1));
+            if (neighbours.size() == 2) {
+                boolean aVisited = visited.contains(neighbours.get(0));
+                boolean bVisited = visited.contains(neighbours.get(1));
 
 
-            if (aVisited && !bVisited) {
-                visitCell(currentWall, neighbours.get(1));
-            } else if (!aVisited && bVisited) {
-                visitCell(currentWall, neighbours.get(0));
-            } else if (aVisited) {
+                if (aVisited && !bVisited) {
+                    visitCell(currentWall, neighbours.get(1));
+                } else if (!aVisited && bVisited) {
+                    visitCell(currentWall, neighbours.get(0));
+                } else if (aVisited) {
+                    wallTiles.remove(currentWall);
+                }
+            } else {
                 wallTiles.remove(currentWall);
             }
         }
@@ -56,8 +61,6 @@ public class RandomPrim extends MazeGenerator {
     }
 
     private void visitCell(Point wall, Point neighbour) {
-
-
         visited.add(neighbour);
         path.add(wall);
         path.add(neighbour);

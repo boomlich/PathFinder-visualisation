@@ -1,8 +1,10 @@
-package maze;
+package maze.algoritms;
 
 import grid.Grid;
 import grid.Tile;
 import grid.TileState;
+import maze.MazeGenerator;
+import maze.NeighburCells;
 
 import java.awt.*;
 import java.util.ArrayList;

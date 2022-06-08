@@ -1,5 +1,6 @@
 package controller;
 
+import maze.MazeMode;
 import model.PathMazeModel;
 import view.Viewer;
 
@@ -31,8 +32,21 @@ public class Controller implements KeyListener, ActionListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        model.generateMaze();
+        char key = e.getKeyChar();
 
+        if (key == KeyEvent.VK_ENTER) {
+            model.generateMaze();
+        } else if (key == KeyEvent.VK_SPACE) {
+            model.fastMazeGeneration();
+        } else if (key == KeyEvent.VK_1) {
+            model.setMazeMode(MazeMode.DFS);
+        } else if (key == KeyEvent.VK_2) {
+            model.setMazeMode(MazeMode.KRUSKAL);
+        } else if (key == KeyEvent.VK_3) {
+            model.setMazeMode(MazeMode.PRIM);
+        } else if (key == KeyEvent.VK_4) {
+            model.setMazeMode(MazeMode.DIVISION);
+        }
     }
 
     @Override

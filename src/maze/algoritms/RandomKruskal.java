@@ -1,13 +1,14 @@
-package maze;
+package maze.algoritms;
 
 import grid.Grid;
 import grid.Tile;
+import maze.MazeGenerator;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class RandomKruskal extends MazeGenerator{
+public class RandomKruskal extends MazeGenerator {
 
     private final List<HashSet<Point>> freeTiles;
     private final List<Point> wallTiles;
