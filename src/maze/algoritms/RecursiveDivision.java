@@ -11,9 +11,8 @@ import java.util.List;
 
 public class RecursiveDivision extends MazeGenerator {
 
-    private List<Integer> horizontalWalls = new ArrayList<>();
-    private List<Integer> verticalWalls = new ArrayList<>();
-
+    private final List<Integer> horizontalWalls = new ArrayList<>();
+    private final List<Integer> verticalWalls = new ArrayList<>();
 
     public RecursiveDivision(Grid<Tile> grid, Point startPoint) {
         super(grid, false);

@@ -2,6 +2,7 @@ package controller;
 
 import maze.MazeMode;
 import model.PathMazeModel;
+import view.UI;
 import view.Viewer;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ public class Controller implements KeyListener, ActionListener {
     PathMazeModel model;
     Viewer viewer;
 
-    public Controller(PathMazeModel model, Viewer viewer) {
+    public Controller(PathMazeModel model, Viewer viewer, UI ui) {
         this.model = model;
         this.viewer = viewer;
         MouseController mouseController = new MouseController(model);
@@ -23,6 +24,7 @@ public class Controller implements KeyListener, ActionListener {
         viewer.addKeyListener(this);
         viewer.addMouseListener(mouseController);
         viewer.addMouseMotionListener(mouseController);
+        ui.setActionListener(new ButtonController(model));
 
         Timer timer = new Timer(10, this);
         timer.start();
@@ -35,6 +37,8 @@ public class Controller implements KeyListener, ActionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+
+        System.out.println("yes");
 
         int key = e.getKeyCode();
 
@@ -52,6 +56,8 @@ public class Controller implements KeyListener, ActionListener {
             model.setMazeMode(MazeMode.DIVISION);
         } else if (key == KeyEvent.VK_R) {
             model.resetGrid();
+        } else if (key == KeyEvent.VK_F) {
+            model.findPath();
         }
     }
 
@@ -62,8 +68,8 @@ public class Controller implements KeyListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         model.update();
         viewer.repaint();
-//        System.out.println("updated");
     }
 }

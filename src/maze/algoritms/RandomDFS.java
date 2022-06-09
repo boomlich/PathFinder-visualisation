@@ -2,9 +2,8 @@ package maze.algoritms;
 
 import grid.Grid;
 import grid.Tile;
-import grid.TileState;
 import maze.MazeGenerator;
-import maze.NeighburCells;
+import maze.NeighbourCells;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class RandomDFS extends MazeGenerator {
 
     private List<Point> getUnvisitedNeighbours(Point cell) {
         List<Point> unvisitedNeighbours = new ArrayList<>();
-        for (NeighburCells neighbourOffset: NeighburCells.ALL_VALUES()) {
+        for (NeighbourCells neighbourOffset: NeighbourCells.ALL_VALUES()) {
             Point neighbour = new Point(cell.x + neighbourOffset.x, cell.y + neighbourOffset.y);
             if (grid.inBounds(neighbour)) {
                 if (!visited.contains(neighbour)) {

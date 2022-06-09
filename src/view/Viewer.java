@@ -19,6 +19,9 @@ public class Viewer extends JComponent {
 
     public Viewer(Renderable<Tile> model) {
         this.model = model;
+
+        this.setBackground(Color.BLACK);
+        this.setPreferredSize(new Dimension(500, 600));
     }
 
     @Override
@@ -26,7 +29,7 @@ public class Viewer extends JComponent {
         super.paint(g);
         Graphics2D g2D = (Graphics2D) g;
 
-        drawGrid(g2D, 20, 20, 500, 500);
+        drawGrid(g2D, 20, 20, model.getRenderWidth(), model.getRenderHeight());
     }
 
     private void drawGrid(Graphics2D g2D, double offsetX, double offsetY, double width, double height) {
@@ -56,7 +59,13 @@ public class Viewer extends JComponent {
         } else if (tile.getTileState() == TileState.START) {
             g2D.setColor(Color.ORANGE);
         } else if (tile.getTileState() == TileState.CURRENT) {
-            g2D.setColor(Color.red);
+            g2D.setColor(Color.RED);
+        } else if (tile.getTileState() == TileState.SEARCH) {
+            g2D.setColor(Color.CYAN);
+        } else if (tile.getTileState() == TileState.VISITED) {
+            g2D.setColor(Color.GREEN.darker().darker());
+        } else if (tile.getTileState() == TileState.PATH) {
+            g2D.setColor(Color.ORANGE);
         }
         g2D.fill(rect);
 

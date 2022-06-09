@@ -5,5 +5,7 @@ public enum InteractMode {
     NORMAL,
     WALL,
     GOAL,
-    SPAWN
+    SPAWN,
+    MAZE_GEN,
+    PATH_FIND
 }

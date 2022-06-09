@@ -8,11 +8,14 @@ import maze.algoritms.RandomDFS;
 import maze.algoritms.RandomKruskal;
 import maze.algoritms.RandomPrim;
 import maze.algoritms.RecursiveDivision;
+import pathfinding.PathDijkstra;
+import pathfinding.PathFindMode;
 import pathfinding.Pathfinder;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class PathMazeModel implements Renderable<Tile> {
 
@@ -20,21 +23,27 @@ public class PathMazeModel implements Renderable<Tile> {
     private Pathfinder pathFinder;
     private Point startCell;
     private List<Point> mazePath = new ArrayList<>();
+    private List<Point> pathSearch = new ArrayList<>();
+    private List<Point> shortestPath = new ArrayList<>();
     private Point currentTile;
     private MazeMode mazeMode;
+    private PathFindMode pathMode;
     private boolean inverted;
     private InteractMode interactMode;
     private int renderWidth;
     private int renderHeight;
+    private int playSpeed = 1;
+    private final Random random = new Random();
+    private List<Point> freeTiles;
 
     public PathMazeModel() {
         grid = new Grid<>(50, 50, new Tile(TileState.NORMAL));
         setStartCell(5, 5);
-        pathFinder = new Pathfinder();
         mazeMode = MazeMode.PRIM;
         interactMode = InteractMode.WALL;
         renderWidth = 500;
         renderHeight = 500;
+        freeTiles = new ArrayList<>();
     }
 
     public void generateMaze() {
@@ -54,7 +63,26 @@ public class PathMazeModel implements Renderable<Tile> {
 
         assert mazeGenerator != null;
         mazePath = mazeGenerator.generateMaze();
+        freeTiles = getTilesWithState(TileState.NORMAL);
         currentTile = mazePath.remove(0);
+        interactMode = InteractMode.MAZE_GEN;
+
+        if (playSpeed == 10) {
+            fastMazeGeneration();
+        }
+    }
+
+    private List<Point> getTilesWithState(TileState state) {
+        List<Point> tiles = new ArrayList<>();
+        for (int y = 0; y < grid.getHeight(); y++) {
+            for (int x = 0; x < grid.getWidth(); x++) {
+                Point cell = new Point(x, y);
+                if (grid.getCell(cell).getTileState() == state) {
+                    tiles.add(cell);
+                }
+            }
+        }
+        return tiles;
     }
 
     public void setMazeMode(MazeMode mazeMode) {
@@ -62,9 +90,11 @@ public class PathMazeModel implements Renderable<Tile> {
     }
 
     public void resetGrid() {
-        System.out.println("reset");
         mazePath.clear();
+        shortestPath.clear();
+        pathSearch.clear();
         grid.fill(new Tile(TileState.NORMAL));
+        interactMode = InteractMode.WALL;
     }
 
     public void fastMazeGeneration() {
@@ -75,19 +105,68 @@ public class PathMazeModel implements Renderable<Tile> {
 
     public void update() {
 
-        if (!mazePath.isEmpty()) {
-            mazeGenerationStep();
+        for (int i = 0; i < playSpeed; i++) {
+            if (interactMode == InteractMode.PATH_FIND) {
+                pathFinderStep();
+            } else if (interactMode == InteractMode.MAZE_GEN) {
+                mazeGenerationStep();
+            }
         }
     }
 
     private void mazeGenerationStep() {
-        if (inverted) {
-            grid.setCell(currentTile, new Tile(TileState.NORMAL));
+        if (!mazePath.isEmpty()) {
+            if (inverted) {
+                grid.setCell(currentTile, new Tile(TileState.NORMAL));
+            } else {
+                grid.setCell(currentTile, new Tile(TileState.WALL));
+            }
+            currentTile = mazePath.remove(0);
+            grid.setCell(currentTile, new Tile(TileState.CURRENT));
         } else {
-            grid.setCell(currentTile, new Tile(TileState.WALL));
+            interactMode = InteractMode.WALL;
+            Point startPoint = freeTiles.remove(random.nextInt(freeTiles.size()));
+            Point endPoint = freeTiles.remove(random.nextInt(freeTiles.size()));
         }
-        currentTile = mazePath.remove(0);
-        grid.setCell(currentTile, new Tile(TileState.CURRENT));
+    }
+
+    private void pathFinderStep() {
+        if (!pathSearch.isEmpty()) {
+            grid.setCell(currentTile, new Tile(TileState.VISITED));
+            currentTile = pathSearch.remove(0);
+            grid.setCell(currentTile, new Tile(TileState.SEARCH));
+        } else if (!shortestPath.isEmpty()) {
+            currentTile = shortestPath.remove(0);
+            grid.setCell(currentTile, new Tile(TileState.PATH));
+        } else {
+            interactMode = InteractMode.WALL;
+        }
+    }
+
+    public void findPath() {
+
+        Point start = new Point(1, 2);
+        Point end = new Point(41, 48);
+
+        if (pathMode == PathFindMode.DIJKSTRA) {
+            pathFinder = new PathDijkstra(start, end, grid);
+        }
+
+        shortestPath = pathFinder.findPath();
+        pathSearch = pathFinder.getSearchPath();
+        currentTile = pathSearch.remove(0);
+
+        interactMode = InteractMode.PATH_FIND;
+
+        if (playSpeed == 10) {
+            fastPath();
+        }
+    }
+
+    public void fastPath() {
+        while (!shortestPath.isEmpty()) {
+            pathFinderStep();
+        }
     }
 
     @Override
@@ -103,6 +182,13 @@ public class PathMazeModel implements Renderable<Tile> {
     @Override
     public int getRenderHeight() {
         return renderHeight;
+    }
+
+    private int generateRandomPoint() {
+        List<Point> validPoints = new ArrayList<>();
+
+
+        return 0;
     }
 
     private void setStartCell(int x, int y) {
@@ -126,10 +212,18 @@ public class PathMazeModel implements Renderable<Tile> {
 
     public void setInteractMode(InteractMode mode) {
         interactMode = mode;
-
     }
 
     public InteractMode getInteractMode() {
         return interactMode;
+    }
+
+    public void setPathMode(PathFindMode pathMode) {
+        this.pathMode = pathMode;
+    }
+
+    public void setSpeed(int speed) {
+        playSpeed = speed;
+        System.out.println(playSpeed);
     }
 }
