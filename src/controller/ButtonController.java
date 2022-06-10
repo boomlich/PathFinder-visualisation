@@ -22,25 +22,21 @@ public class ButtonController implements ActionListener {
         String command = e.getActionCommand();
 
         if (command == "PATH_DIJKSTRA") {
-            model.setPathMode(PathFindMode.DIJKSTRA);
-            model.findPath();
+            model.findPath(PathFindMode.DIJKSTRA);
 
         } else if (command.equals("PATH_ASTAR")) {
-
+            System.out.println("ASTAR");
+            model.findPath(PathFindMode.ASTAR);
         } else if (command.equals("PATH_BFS")) {
 
         } else if (command.equals("MAZE_DFS")) {
-            model.setMazeMode(MazeMode.DFS);
-            model.generateMaze();
+            model.generateMaze(MazeMode.DFS);
         } else if (command.equals("MAZE_KRUSKAL")) {
-            model.setMazeMode(MazeMode.KRUSKAL);
-            model.generateMaze();
+            model.generateMaze(MazeMode.KRUSKAL);
         } else if (command.equals("MAZE_PRIM")) {
-            model.setMazeMode(MazeMode.PRIM);
-            model.generateMaze();
+            model.generateMaze(MazeMode.PRIM);
         } else if (command.equals("MAZE_DIV")) {
-            model.setMazeMode(MazeMode.DIVISION);
-            model.generateMaze();
+            model.generateMaze(MazeMode.DIVISION);
         } else if (command.equals("SPEED_1x")) {
             model.setSpeed(1);
         } else if (command.equals("SPEED_2x")) {

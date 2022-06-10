@@ -66,6 +66,8 @@ public class Viewer extends JComponent {
             g2D.setColor(Color.GREEN.darker().darker());
         } else if (tile.getTileState() == TileState.PATH) {
             g2D.setColor(Color.ORANGE);
+        } else if (tile.getTileState() == TileState.GOAL) {
+            g2D.setColor(Color.RED);
         }
         g2D.fill(rect);
 

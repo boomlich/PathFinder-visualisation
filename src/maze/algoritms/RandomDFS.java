@@ -16,9 +16,9 @@ public class RandomDFS extends MazeGenerator {
     private Point currentCell;
     private Point chosenCell;
 
-    public RandomDFS(Grid<Tile> grid, Point startPoint) {
+    public RandomDFS(Grid<Tile> grid) {
         super(grid, true);
-        visitCell(startPoint);
+        visitCell(new Point(2, 2));
         generateMaze();
     }
 

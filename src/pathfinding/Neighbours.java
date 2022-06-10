@@ -4,19 +4,18 @@ import java.util.Arrays;
 
 public enum Neighbours {
 
-    NORTH(0, -1, 1),
-    NORTHEAST(1, -1, 1.41),
-    EAST(1, 0, 1),
-    SOUTHEAST(1, 1, 1.41),
-    SOUTH(0, 1, 1),
-    SOUTHWEST(-1, 1, 1.41),
-    WEST(-1, 0, 1),
-    NORTHWEST(-1, -1, 1.41);
+    NORTH(0, -1, 10),
+    NORTHEAST(1, -1, 14),
+    EAST(1, 0, 10),
+    SOUTHEAST(1, 1, 14),
+    SOUTH(0, 1, 10),
+    SOUTHWEST(-1, 1, 14),
+    WEST(-1, 0, 10),
+    NORTHWEST(-1, -1, 14);
 
-    public final int x, y;
-    public final double cost;
+    public final int x, y, cost;
 
-    Neighbours(int x, int y, double cost) {
+    Neighbours(int x, int y, int cost) {
         this.x = x;
         this.y = y;
         this.cost = cost;

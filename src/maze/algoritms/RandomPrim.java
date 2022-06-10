@@ -15,7 +15,7 @@ public class RandomPrim extends MazeGenerator {
     List<Point> wallTiles = new ArrayList<>();
 
 
-    public RandomPrim(Grid<Tile> grid, Point startingPoint) {
+    public RandomPrim(Grid<Tile> grid) {
         super(grid, true);
 
         for (int y = 0; y < grid.getHeight(); y += 2) {

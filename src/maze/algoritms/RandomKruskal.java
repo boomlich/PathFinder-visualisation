@@ -13,7 +13,7 @@ public class RandomKruskal extends MazeGenerator {
     private final List<HashSet<Point>> freeTiles;
     private final List<Point> wallTiles;
 
-    public RandomKruskal(Grid<Tile> grid, Point startingPoint) {
+    public RandomKruskal(Grid<Tile> grid) {
         super(grid, true);
 
         freeTiles = new ArrayList<>();

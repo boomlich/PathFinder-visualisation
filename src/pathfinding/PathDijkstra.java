@@ -12,87 +12,92 @@ import java.util.List;
 
 public class PathDijkstra extends Pathfinder{
 
-    private List<Point> visited;
-    private HashSet<Point> unvisited;
-
-    private HashMap<Point, Double> lengthTo;
-    private HashMap<Point, Point> fromWho;
-    private Point start;
-    private Point goal;
-    private Grid<Tile> grid;
+    private final List<Point> visited;
+    protected final HashSet<Point> unvisited;
+    protected final HashMap<Point, Integer> lengthFromStart;
+    protected final HashMap<Point, Integer> lengthToGoal;
+    protected final HashMap<Point, Point> fromWho;
+    private final Point start;
+    protected final Point goal;
+    private final Grid<Tile> grid;
 
     public PathDijkstra(Point start, Point goal, Grid<Tile> grid) {
-
-
-        visited = new ArrayList<>();
-        unvisited = new HashSet<>();
-        fromWho = new HashMap<>();
-        lengthTo = new HashMap<>();
-
-        for (int y = 0; y < grid.getHeight(); y++) {
-            for (int x = 0; x < grid.getWidth(); x++) {
-                Point cell = new Point(x, y);
-                if (grid.getCell(cell).getTileState() != TileState.WALL) {
-                    unvisited.add(cell);
-                    lengthTo.put(cell, 1000000000000000.0);
-                }
-            }
-        }
-        lengthTo.put(start, 0.0);
         this.start = start;
         this.goal = goal;
         this.grid = grid;
 
+        visited = new ArrayList<>();
+        unvisited = new HashSet<>();
+        fromWho = new HashMap<>();
+        lengthFromStart = new HashMap<>();
+        lengthToGoal = new HashMap<>();
+        initiateAllSets();
+    }
+
+    private void initiateAllSets() {
+        for (int y = 0; y < grid.getHeight(); y++) {
+            for (int x = 0; x < grid.getWidth(); x++) {
+                Point cell = new Point(x, y);
+                if (grid.getCell(cell).getTileState() != TileState.WALL) {
+                    initiateCellInSet(cell);
+                }
+            }
+        }
+        lengthFromStart.put(start, 0);
+    }
+
+    protected void initiateCellInSet(Point cell) {
+        unvisited.add(cell);
+        lengthFromStart.put(cell, 100000000);
     }
 
     @Override
     public List<Point> findPath() {
-
         Point currentPoint = new Point(0, 0);
         int i = 0;
-        while (!visited.contains(goal) && i < 10000) {
-            currentPoint = findClosestNextPoint();
+        int limit = 10000;
+        while (!visited.contains(goal) && i < limit) {
+            currentPoint = findNextCell();
             visited.add(currentPoint);
             unvisited.remove(currentPoint);
 
             for (Neighbours neighbour: Neighbours.ALL_VALUES()) {
                 Point neighbourCell = new Point(currentPoint.x + neighbour.x, currentPoint.y + neighbour.y);
-                if (grid.inBounds(neighbourCell) && !visited.contains(neighbourCell)) {
+                if (grid.inBounds(neighbourCell) && unvisited.contains(neighbourCell)) {
 
-                    double length = lengthTo.get(currentPoint) + neighbour.cost;
+                    int length = lengthFromStart.get(currentPoint) + neighbour.cost;
 
-                    // Check if cell already has a length. If shorter length then replace
-                    if (fromWho.containsKey(neighbourCell)) {
-                        if (length < lengthTo.get(neighbourCell)) {
-                            lengthTo.put(neighbourCell, length);
-                        }
-                    } else {
-                        lengthTo.put(neighbourCell, lengthTo.get(currentPoint) + neighbour.cost);
+                    // If length to cell is lower than previous, then update its length
+                    if (length < lengthFromStart.get(neighbourCell)) {
+                        lengthFromStart.put(neighbourCell, length);
                         fromWho.put(neighbourCell, currentPoint);
                     }
                 }
             }
             i++;
-            System.out.println(i);
         }
 
+        return extractPath(currentPoint, i < limit);
+    }
+
+    private List<Point> extractPath(Point currentPoint, boolean limitReached) {
+        List<Point> path = new ArrayList<>();
         path.add(currentPoint);
-        while (!path.contains(start)) {
+        while (!path.contains(start) && limitReached) {
             currentPoint = fromWho.get(currentPoint);
             path.add(currentPoint);
         }
-
         return path;
     }
 
-    private Point findClosestNextPoint() {
+    protected Point findNextCell() {
 
         Point nextPoint = new Point(0, 0);
-        double distance = 10000000000000.0;
+        int distance = 100000000;
 
         for (Point unvisitedCell: unvisited) {
-            if (lengthTo.get(unvisitedCell) < distance) {
-                distance = lengthTo.get(unvisitedCell);
+            if (lengthFromStart.get(unvisitedCell) < distance) {
+                distance = lengthFromStart.get(unvisitedCell);
                 nextPoint = unvisitedCell;
             }
         }

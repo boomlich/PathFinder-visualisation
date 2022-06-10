@@ -2,6 +2,7 @@ package controller;
 
 import maze.MazeMode;
 import model.PathMazeModel;
+import pathfinding.PathFindMode;
 import view.UI;
 import view.Viewer;
 
@@ -43,21 +44,21 @@ public class Controller implements KeyListener, ActionListener {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_ENTER) {
-            model.generateMaze();
+//            model.generateMaze();
         } else if (key == KeyEvent.VK_SPACE) {
             model.fastMazeGeneration();
         } else if (key == KeyEvent.VK_1) {
-            model.setMazeMode(MazeMode.DFS);
+//            model.setMazeMode(MazeMode.DFS);
         } else if (key == KeyEvent.VK_2) {
-            model.setMazeMode(MazeMode.KRUSKAL);
+//            model.setMazeMode(MazeMode.KRUSKAL);
         } else if (key == KeyEvent.VK_3) {
-            model.setMazeMode(MazeMode.PRIM);
+//            model.setMazeMode(MazeMode.PRIM);
         } else if (key == KeyEvent.VK_4) {
-            model.setMazeMode(MazeMode.DIVISION);
+//            model.setMazeMode(MazeMode.DIVISION);
         } else if (key == KeyEvent.VK_R) {
             model.resetGrid();
         } else if (key == KeyEvent.VK_F) {
-            model.findPath();
+            model.findPath(PathFindMode.DIJKSTRA);
         }
     }
 
