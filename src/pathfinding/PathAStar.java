@@ -18,24 +18,21 @@ public class PathAStar extends PathDijkstra {
     @Override
     protected Point findNextCell() {
         Point nextPoint = new Point(0, 0);
-        int distance = 100000000;
+        int lowestFCost = 100000000;
+        int lowestHCost = 100000000;
 
-        // Find the lowest F-cost
+        // Find the cell with the lowest F-cost and H-cost
         for (Point unvisitedCell: unvisited) {
             int cellFCost = lengthFromStart.get(unvisitedCell) + lengthToGoal.get(unvisitedCell);
-            if (cellFCost < distance) {
-                distance = cellFCost;
-            }
-        }
-
-        // Find the cell with the lowest F-cost and lowest H-cost
-        int lowestHCost = 100000;
-        for (Point unvisitedCell: unvisited) {
-            if (lengthFromStart.get(unvisitedCell) + lengthToGoal.get(unvisitedCell) == distance) {
-                if (lengthToGoal.get(unvisitedCell) <= lowestHCost) {
+            if (cellFCost == lowestFCost) {
+                if (lengthToGoal.get(unvisitedCell) < lowestHCost) {
                     lowestHCost = lengthToGoal.get(unvisitedCell);
                     nextPoint = unvisitedCell;
                 }
+            } else if (cellFCost < lowestFCost){
+                lowestFCost = cellFCost;
+                lowestHCost = lengthToGoal.get(unvisitedCell);
+                nextPoint = unvisitedCell;
             }
         }
         return nextPoint;

@@ -7,33 +7,23 @@ import java.util.Vector;
 
 public class UI extends JPanel {
 
-    JPanel pathFinding;
-    JPanel mazeGeneration;
-    JPanel speedOptions;
+    private JPanel pathFinding;
+    private JPanel mazeGeneration;
+    private JPanel speedOptions;
+    private JComboBox<String> resolutionBox;
+    private JPanel resetButtons;
 
     public UI (){
 
+        this.setPreferredSize(new Dimension(100, 75));
 
-        this.setBackground(Color.GREEN);
-        this.setPreferredSize(new Dimension(200, 100));
 
-        JPanel pathContainer = new JPanel();
-        pathContainer.setLayout(new BoxLayout(pathContainer, BoxLayout.Y_AXIS));
-        JLabel pathTitle = new JLabel("Pathfinding algorithms");
-        pathTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        pathContainer.add(pathTitle);
+        UIPanel pathContainer = new UIPanel("Pathfinding");
+        UIPanel mazeContainer = new UIPanel("Maze generation");
+        UIPanel speedContainer = new UIPanel("Animation speed");
+        UIPanel resolutionPanel = new UIPanel("Grid size");
+        UIPanel resetPanel = new UIPanel("Reset");
 
-        JPanel mazeContainer = new JPanel();
-        mazeContainer.setLayout(new BoxLayout(mazeContainer, BoxLayout.Y_AXIS));
-        JLabel mazeTitle = new JLabel("Maze generation algorithms");
-        mazeTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        mazeContainer.add(mazeTitle);
-
-        JPanel speedContainer = new JPanel();
-        speedContainer.setLayout(new BoxLayout(speedContainer, BoxLayout.Y_AXIS));
-        JLabel speedTitle = new JLabel("Animation speed");
-        speedTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        speedContainer.add(speedTitle);
 
 
         pathFinding = new JPanel();
@@ -44,7 +34,6 @@ public class UI extends JPanel {
 
         pathFinding.add(new UIButton("Dijkstra", "PATH_DIJKSTRA"));
         pathFinding.add(new UIButton("A*", "PATH_ASTAR"));
-        pathFinding.add(new UIButton("Breadth-First", "PATH_BFS"));
 
         mazeGeneration.add(new UIButton("Depth-First", "MAZE_DFS"));
         mazeGeneration.add(new UIButton("Kruskal", "MAZE_KRUSKAL"));
@@ -84,20 +73,38 @@ public class UI extends JPanel {
         speedOptions.add(speedInstant);
 
 
+
+        String[] resolutionStrings = {"10x10", "20x10", "25x25", "50x25",  "50x50", "100x50"};
+        resolutionBox = new JComboBox<>(resolutionStrings);
+        resolutionBox.setSelectedIndex(3);
+
+
+        resetButtons = new JPanel();
+        resetButtons.add(new UIButton("Path", "RESET_PATH"));
+        resetButtons.add(new UIButton("Grid", "RESET_GRID"));
+
+
+
         pathContainer.add(pathFinding);
         mazeContainer.add(mazeGeneration);
         speedContainer.add(speedOptions);
+        resolutionPanel.add(resolutionBox);
+        resetPanel.add(resetButtons);
 
-
+        this.add(resetPanel);
         this.add(pathContainer);
         this.add(mazeContainer);
         this.add(speedContainer);
+        this.add(resolutionPanel);
+
     }
 
     public void setActionListener(ActionListener controller) {
         addActionListenerToComp(pathFinding, controller);
         addActionListenerToComp(mazeGeneration, controller);
         addActionListenerToComp(speedOptions, controller);
+        addActionListenerToComp(resetButtons, controller);
+        resolutionBox.addActionListener(controller);
     }
 
     private void addActionListenerToComp(JPanel jPanel, ActionListener controller) {

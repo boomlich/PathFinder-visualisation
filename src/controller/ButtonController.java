@@ -4,10 +4,10 @@ import maze.MazeMode;
 import model.PathMazeModel;
 import pathfinding.PathFindMode;
 
-import java.awt.*;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.file.Path;
+import java.util.Objects;
 
 public class ButtonController implements ActionListener {
 
@@ -19,17 +19,31 @@ public class ButtonController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         String command = e.getActionCommand();
 
-        if (command == "PATH_DIJKSTRA") {
+        JComboBox<?> dropDown = null;
+        if (e.getSource() instanceof JComboBox<?>) {
+            dropDown = (JComboBox<?>) e.getSource();
+        }
+
+        if (dropDown != null) {
+            command = (String) dropDown.getSelectedItem();
+            switch (Objects.requireNonNull(command)) {
+                case "10x10" -> model.setGridResolution(10, 10);
+                case "20x10" -> model.setGridResolution(20, 10);
+                case "25x25" -> model.setGridResolution(25, 25);
+                case "50x25" -> model.setGridResolution(50, 25);
+                case "50x50" -> model.setGridResolution(50, 50);
+                case "100x50" -> model.setGridResolution(100, 50);
+            }
+        }
+
+        if (command.equals("PATH_DIJKSTRA")) {
             model.findPath(PathFindMode.DIJKSTRA);
-
         } else if (command.equals("PATH_ASTAR")) {
-            System.out.println("ASTAR");
             model.findPath(PathFindMode.ASTAR);
-        } else if (command.equals("PATH_BFS")) {
-
-        } else if (command.equals("MAZE_DFS")) {
+        }  else if (command.equals("MAZE_DFS")) {
             model.generateMaze(MazeMode.DFS);
         } else if (command.equals("MAZE_KRUSKAL")) {
             model.generateMaze(MazeMode.KRUSKAL);
@@ -45,10 +59,13 @@ public class ButtonController implements ActionListener {
             System.out.println("speed 5");
             model.setSpeed(5);
         } else if (command.equals("SPEED_INSTANT")) {
-            System.out.println("instatn");
             model.setSpeed(10);
             model.fastMazeGeneration();
             model.fastPath();
+        } else if (command.equals("RESET_GRID")) {
+            model.resetGrid();
+        } else if (command.equals("RESET_PATH")) {
+            model.clearPath();
         }
     }
 }

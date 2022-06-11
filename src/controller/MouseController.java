@@ -2,7 +2,9 @@ package controller;
 
 import model.InteractMode;
 import model.PathMazeModel;
+import view.Viewer;
 
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -12,10 +14,12 @@ public class MouseController implements MouseListener, MouseMotionListener {
 
     private int prevX, prevY;
     private final PathMazeModel model;
+    private final Viewer viewer;
     private InteractMode prevInteractMode;
 
-    public MouseController(PathMazeModel model) {
+    public MouseController(PathMazeModel model, Viewer viewer) {
         this.model = model;
+        this.viewer = viewer;
         prevX = -1;
         prevY = -1;
     }
@@ -48,11 +52,11 @@ public class MouseController implements MouseListener, MouseMotionListener {
         if (e.getButton() == MouseEvent.BUTTON3) {
             model.setInteractMode(prevInteractMode);
         }
+        model.mouseReleased();
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        System.out.println("ENTERED");
 
     }
 
@@ -71,7 +75,7 @@ public class MouseController implements MouseListener, MouseMotionListener {
     }
 
     private void interactWithGrid(Point mouse) {
-        int indexX = (mouse.x - 20) / (model.getRenderWidth() / model.getGrid().getWidth());
+        int indexX = (mouse.x - viewer.getGridOffsetX()) / (model.getRenderWidth() / model.getGrid().getWidth());
         int indexY = (mouse.y - 20) / (model.getRenderHeight() / model.getGrid().getHeight());
 
         if (indexX != prevX || indexY != prevY) {

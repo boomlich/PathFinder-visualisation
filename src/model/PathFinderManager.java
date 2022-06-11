@@ -18,6 +18,7 @@ public class PathFinderManager {
     private List<Point> shortestPath;
     private List<Point> pathSearch;
     private Point currentCell;
+    private PathFindMode pathMode;
 
     public PathFinderManager() {
         shortestPath = new ArrayList<>();
@@ -30,26 +31,27 @@ public class PathFinderManager {
      * @param grid grid with all cells
      * @param cell  current cell
      * @param newState new state of the cell
-     * @param exceptState state to avoid updating the cell if the current matches
      */
-    private void updateCellWithStateException(Grid<Tile> grid, Point cell, TileState newState, TileState exceptState) {
-        if (grid.getCell(cell).getTileState() != exceptState) {
+    private void updateCellWithStateException(Grid<Tile> grid, Point cell, TileState newState) {
+        TileState cellState = grid.getCell(cell).getTileState();
+        if (cellState != TileState.START && cellState != TileState.GOAL) {
             grid.setCell(cell, new Tile(newState));
         }
     }
 
     private void pathFinderStep(Grid<Tile> grid) {
         if (!pathSearch.isEmpty()) {
-            updateCellWithStateException(grid, currentCell, TileState.VISITED, TileState.START);
+            updateCellWithStateException(grid, currentCell, TileState.VISITED);
             currentCell = pathSearch.remove(0);
-            updateCellWithStateException(grid, currentCell, TileState.SEARCH, TileState.START);
+            updateCellWithStateException(grid, currentCell, TileState.SEARCH);
         } else if (!shortestPath.isEmpty()) {
             currentCell = shortestPath.remove(0);
-            grid.setCell(currentCell, new Tile(TileState.PATH));
+            updateCellWithStateException(grid, currentCell, TileState.PATH);
         }
     }
 
     public void findPath(PathFindMode pathMode, Point start, Point goal, Grid<Tile> grid) {
+        this.pathMode = pathMode;
 
         Pathfinder pathFinder = null;
         if (pathMode == PathFindMode.DIJKSTRA) {
@@ -62,7 +64,6 @@ public class PathFinderManager {
         shortestPath = pathFinder.findPath();
         pathSearch = pathFinder.getSearchPath();
         currentCell = pathSearch.remove(0);
-
     }
 
     public void fastPath(Grid<Tile> grid) {
@@ -86,4 +87,7 @@ public class PathFinderManager {
         return !shortestPath.isEmpty();
     }
 
+    public PathFindMode getPathMode() {
+        return pathMode;
+    }
 }

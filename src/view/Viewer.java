@@ -16,12 +16,13 @@ public class Viewer extends JComponent {
     }
 
     private final Renderable<Tile> model;
+    private int gridOffsetX;
 
     public Viewer(Renderable<Tile> model) {
         this.model = model;
 
         this.setBackground(Color.BLACK);
-        this.setPreferredSize(new Dimension(500, 600));
+        this.setPreferredSize(new Dimension(1000, 500));
     }
 
     @Override
@@ -29,7 +30,9 @@ public class Viewer extends JComponent {
         super.paint(g);
         Graphics2D g2D = (Graphics2D) g;
 
-        drawGrid(g2D, 20, 20, model.getRenderWidth(), model.getRenderHeight());
+        gridOffsetX = (getWidth() - model.getRenderWidth()) / 2;
+
+        drawGrid(g2D, gridOffsetX, 20, model.getRenderWidth(), model.getRenderHeight());
     }
 
     private void drawGrid(Graphics2D g2D, double offsetX, double offsetY, double width, double height) {
@@ -57,7 +60,7 @@ public class Viewer extends JComponent {
         } else if (tile.getTileState() == TileState.WALL) {
             g2D.setColor(Color.DARK_GRAY);
         } else if (tile.getTileState() == TileState.START) {
-            g2D.setColor(Color.ORANGE);
+            g2D.setColor(Color.GREEN);
         } else if (tile.getTileState() == TileState.CURRENT) {
             g2D.setColor(Color.RED);
         } else if (tile.getTileState() == TileState.SEARCH) {
@@ -73,5 +76,9 @@ public class Viewer extends JComponent {
 
         g2D.setColor(Color.BLACK);
         g2D.draw(rect);
+    }
+
+    public int getGridOffsetX() {
+        return gridOffsetX;
     }
 }

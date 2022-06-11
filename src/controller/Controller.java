@@ -20,7 +20,7 @@ public class Controller implements KeyListener, ActionListener {
     public Controller(PathMazeModel model, Viewer viewer, UI ui) {
         this.model = model;
         this.viewer = viewer;
-        MouseController mouseController = new MouseController(model);
+        MouseController mouseController = new MouseController(model, viewer);
 
         viewer.addKeyListener(this);
         viewer.addMouseListener(mouseController);
@@ -30,6 +30,7 @@ public class Controller implements KeyListener, ActionListener {
         Timer timer = new Timer(10, this);
         timer.start();
     }
+
 
     @Override
     public void keyTyped(KeyEvent e) {

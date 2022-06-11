@@ -24,7 +24,7 @@ public class Main {
         frame.setVisible(true);
 
         frame.add(ui, BorderLayout.NORTH);
-        frame.add(viewer, BorderLayout.SOUTH);
+        frame.add(viewer, BorderLayout.CENTER);
 
     }
 }
